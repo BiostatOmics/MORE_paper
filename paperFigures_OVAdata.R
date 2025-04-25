@@ -6,7 +6,7 @@ library(MORE)
 
 ## Run MORE ----
 
-PLSresults = more(targetData = GeneExpresion, 
+PLSresults = more(targetData = GeneExpresion,
                     associations=assoc,
                     regulatoryData=data.omics,
                     condition=edesign,
@@ -25,8 +25,10 @@ output_regpcond = RegulationPerCondition(PLSresults)
 ## Create the summary plots ---------
 summaryPlot(PLSresults,output_regpcond, filterR2 = 0.5)
 summaryPlot(PLSresults,output_regpcond, filterR2 = 0.5, byTargetF = FALSE)
+output_regpcond = FilterRegulationPerCondition(PLSresults, output_regpcond, filterR2 = 0.5) #Filter to R2>0.5
+differentialRegPlot(output = PLSresults, outputRegpcond = output_regpcond)
 
-#Analize the regulations in each of the experimental groups under study. 
+#Analize the regulations in each of the experimental groups under study.
 output_regincond_dif = RegulationInCondition(output_regpcond, 'differentiated')
 output_regincond_im = RegulationInCondition(output_regpcond, 'immunoreactive')
 output_regincond_mes = RegulationInCondition(output_regpcond, 'mesenchymal')
@@ -73,7 +75,7 @@ Annotation = Annotation[,c(2,1,3)]
 
 #Create the GSEA
 y = gseaMORE(output_regincond_dif,output_regincond_pro, Annotation, alpha = 0.05, p.adjust.method= 'none')
-dotplot(y,  split=".sign") +  facet_grid(.~.sign, labeller = as_labeller(c(activated = "proliferative", suppressed = "differentiated"))) 
+dotplot(y,  split=".sign") +  facet_grid(.~.sign, labeller = as_labeller(c(activated = "proliferative", suppressed = "differentiated")))
 
 
 # Analysis for the supplementary materials ------------
